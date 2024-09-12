@@ -1,9 +1,10 @@
 import streamlit as st
 import logging
+import time
 
 from llm import get_immo_xy_gpt4_fewshots, get_ad_content, get_immo_review, get_immo_rewrite, get_immo_places
 from prompts import template_immo_gps, template_immo_review, template_immo_rewrite, template_immo_places
-from utils import generate_polygon_on_map, extract_reviews, display_radar, extract_list, get_gps_coordinate, get_ad_with_gps
+from utils import generate_polygon_on_map, extract_reviews, display_radar, extract_list, get_gps_coordinate, get_ad_with_gps, calculate_time
 
 st.cache_data.clear()
 st.cache_resource.clear()
@@ -15,25 +16,20 @@ logging.basicConfig(filename='app.log',   # Log file name
                     format='%(asctime)s - %(levelname)s - %(message)s',  # Log message format
                     level=logging.INFO)   # Set the log level
 
+
 st.title("Immo Ad Analyzer")
 
-# URL de l'annonce à parser
-ad_url = st.text_input("Renseigner l'URL de l'annonce")
-
 # Description de l'annonce
-ad_desc = st.text_area("Copier / Coller ici la description de l'annonce. Inclure impérativement la ville.")
+ad_desc = st.text_area("Copier / Coller ici la description de l'annonce. Inclure impérativement la ville.", height=250)
 
 if st.button("Lancer l'analyse"):
 
-    if ad_url:
-        title, description, page_text = get_ad_content(ad_url)
-        st.subheader(title)
-        st.write(description)
-        st.write(page_text)
+    if ad_desc:
 
-    elif ad_desc:
+        start = time.time()
         
         with st.spinner('Veuillez patienter ..'):
+            logging.info("")
             answer_review = get_immo_review(ad_desc, template_immo_review)
             st.subheader("Review du bien immobilier")
 
@@ -41,6 +37,9 @@ if st.button("Lancer l'analyse"):
             fig = display_radar(reviews)
             st.plotly_chart(fig)
             st.write(answer_review)
+
+            immo_review_time = time.time()
+            logging.info(f"Immo Review - {calculate_time(start, immo_review_time)}")
 
         with st.spinner('Veuillez patienter ..'):
             answer_places = get_immo_places(ad_desc, template_immo_places)
@@ -54,7 +53,17 @@ if st.button("Lancer l'analyse"):
             st.plotly_chart(fig)
             st.write(answer_gps)
 
+            immo_places_time = time.time()
+            logging.info(f"Immo Guess GPS - {calculate_time(immo_review_time, immo_places_time)}")
+
         with st.spinner('Veuillez patienter ..'):
             answer_rewrite = get_immo_rewrite(ad_desc, template_immo_rewrite)
             st.subheader("Réécriture de l'annonce")
             st.write(answer_rewrite)
+
+            immo_rewrite_time = time.time()
+            logging.info(f"Immo Rewrite - {calculate_time(immo_places_time, immo_rewrite_time)}")
+
+    else:
+
+        st.info("Veuillez renseigner une description")

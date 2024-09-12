@@ -1,7 +1,4 @@
 import os
-import time
-import logging
-import getpass
 
 from bs4 import BeautifulSoup
 
@@ -26,10 +23,11 @@ MODEL_OPENAI = os.getenv('MODEL_OPENAI')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')
 
-from examples import input_ad1, input_ad2, input_wrong1, input_wrong2, output_ad1, output_ad2, output_wrong1, output_wrong2, \
-output_immoreview_ad1, output_immoreview_ad2
+from examples import input_ad1, input_ad2, input_ad3, input_wrong1, input_wrong2, output_ad1, output_ad2, output_ad3, \
+output_wrong1, output_wrong2, output_immoreview_ad1, output_immoreview_ad2
 
 def get_ad_content(url):
+    # Deprecated: to be kept in case we parse URLs only
     loader = WebBaseLoader(url)
 
     pages = []
@@ -74,6 +72,7 @@ def get_immo_xy_gpt4_fewshots(ad, template) :
     examples = [
     {"input": input_ad1, "output": output_ad1},
     {"input": input_ad2, "output": output_ad2},
+    {"input": input_ad3, "output": output_ad3},
     {"input": input_wrong1, "output": output_wrong1},
     {"input": input_wrong2, "output": output_wrong2},
 ]
@@ -144,7 +143,7 @@ def get_immo_review(ad, template):
             embedding_function=OpenAIEmbeddings(model=MODEL_EMBEDDING)
         )
 
-        print(len(vectorstore.get()['documents']))
+        print("Nb de documents retrouvés", len(vectorstore.get()['documents']))
 
     try:
         db_retriever = vectorstore.as_retriever(search_kwargs={"k": 10})
@@ -172,7 +171,7 @@ def get_immo_rewrite(ad, template):
 
     parser = StrOutputParser()
 
-    llm = ChatOpenAI(model=MODEL_OPENAI, temperature=0.3)
+    llm = ChatOpenAI(model=MODEL_OPENAI, temperature=1)
 
     chain = prompt | llm | parser
     answer = chain.invoke({"context": ad})

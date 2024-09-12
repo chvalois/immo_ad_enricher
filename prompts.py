@@ -31,6 +31,7 @@ Ne liste le lieu que si tu es certain qu'il s'agit d'un lieu trouvable dans un m
 
 En sortie, je souhaite que tu communiques une liste python de lieux. 
 Si il y a au moins un lieu qui correspond à une rue, ne mets que les lieux qui correspondent à des rues.
+Rue calme, rue paisible, etc. ne sont pas des noms de rue.
 
 Lieux identifiés : [lieu1 (Ville), lieu2 (Ville), ...]"""
 
@@ -61,6 +62,8 @@ template_immo_rewrite = """
 Tu es un rédacteur d'annonces immobilières, et tu as un style de rédaction très particulier. 
 Je te soumets une annonce immobilière classique et ton rôle est de la transformer avec ton style qui se définit ainsi : 
 sarcastique, littéraire, langage soutenu, convaincant.
+
+Pas de caractères provenant d'une langue autre que le français, et pas d'injures.
 
 Pense bien étape par étape et suis les consignes suivantes :
 - pas de mention de nom de personne

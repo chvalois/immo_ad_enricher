@@ -133,6 +133,29 @@ Bonus du bien (comme piscine, terrasse, dépendance) : 9/10
 L'appartement bénéficie d'une belle terrasse de 10 m², d'un garage en box, d'une place de parking et d'une cave. Ces éléments ajoutent une valeur significative au bien, justifiant une note élevée."""
 
 
+input_ad3 = """
+MEUDON - VAL FLEURY : L'agence STONEO vous propose en exclusivité un appartement de 3 pièces de 54 m², situé dans une rue calme au rez-de-chaussée surélevé d’un immeuble de 1930 récemment ravalé. Les professions libérales sont autorisées dans l’immeuble.
+Il bénéficie d’un agencement efficace en étoile et traversant. Il se compose d’une entrée desservant deux premières pièces pouvant être réunies afin de créer un espace de vie de plus 22 m², d’une grande chambre de 13m² donnant sur cour, ainsi qu’une cuisine séparée, une salle d’eau et des WC séparés.
+Ce bien à rénover conserve encore tout le charme de l’ancien notamment avec sa belle hauteur sous plafond (3,2m), son parquet, ses carreaux de ciment ou encore ses grandes fenêtres.
+Plusieurs options de réagencement sont possibles à l’occasion de la rénovation de cet appartement, parmi lesquelles la possibilité de créer une chambre bébé ou un bureau et d’aménager une cuisine moderne dans le séjour.
+Il est possible d’exercer une profession libérale avec 3 cabinets et une salle d’attente.
+La copropriété est située au pied des commerces (boulangerie, Monoprix, pharmacie, restaurants…) et à proximité immédiate de la gare de Val Fleury (RER C reliant Paris Champ de Mars en 15 min).
+Avec plus de 200 ventes cette année, STONEO s’est affirmée comme une agence immobilière incontournable à Paris. Notre équipe dynamique et expérimentée, notre maîtrise des dernières innovations digitales, notre fichier de plus de 5 000 acheteurs actifs et la mise en place de stratégies de commercialisation personnalisées vous garantissent un accompagnement sans égal pour vos projets d’achat et de vente. Nos clients sont satisfaits (4.9/5 sur Google) et nous recommandent. Notre agent Laurent FEDIDA se tient à votre disposition pour tout complément d'informations.
+"""
+
+output_ad3 = """
+Coordonnées du polygone : [[48.811, 2.236], [48.811, 2.245], [48.804, 2.245], [48.804, 2.236]]
+
+Degré de confiance : 90%
+
+Raisonnement :
+1. L'annonce mentionne spécifiquement que l'appartement est situé à Meudon, dans le quartier de Val Fleury, ce qui limite l'emplacement.
+2. Les coordonnées GPS fournies pour la Gare de Val Fleury (48.8079618, 2.2409902606521745) confortent l'emplacement, étant donné la proximité immédiate avec la gare et les commerces.
+3. En tenant compte de la description qui indique que le bien est proche des commerces et à une distance courte de la gare, j'ai tracé un polygone autour de la gare incluant les zones commerçantes et résidentielles voisines.
+4. Les points de coordonnées créent un espace suffisamment grand autour de la gare, en respectant la zone mentionnée dans l'annonce, ce qui garantit que le bien immobilier proposé se situe bien à l'intérieur du polygone dans le quartier de Val Fleury à Meudon.
+"""
+
+
 input_wrong1 = "What did the cow say to the moon?"
 output_wrong1 = "Ceci ne semble pas correspondre à une annonce immobilière"
 input_wrong2 = "Write me a poem about the moon"

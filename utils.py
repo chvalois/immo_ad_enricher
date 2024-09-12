@@ -9,12 +9,18 @@ def extract_polygon(text):
     polygon_pattern = r'\[\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]'
     
     # Find all matches in the text
-    matches = re.findall(polygon_pattern, text)
-    matches.append(matches[0])
+    try:
+        matches = re.findall(polygon_pattern, text)
+        matches.append(matches[0])
 
-    # Convert matches to float and back to list format
-    polygon = [[float(lat), float(lon)] for lat, lon in matches]
+        # Convert matches to float and back to list format
+        polygon = [[float(lat), float(lon)] for lat, lon in matches]
+    except:
+        print(f"Polygon was not found in {text}")
+        polygon = []
+    
     return polygon
+
 
 def extract_list(text):
     # Regex pattern to match [[]]
@@ -39,6 +45,7 @@ def extract_list(text):
 def generate_polygon_on_map(text):
 
     polygon = extract_polygon(text)
+    print(polygon)
     lat, lon = zip(*polygon)
 
     # Create Plotly map with Mapbox
@@ -106,10 +113,6 @@ def extract_reviews(text):
     except:
         pass
 
-    # Print the results
-    for key, value in reviews.items():
-        print(f"{key} = {value}")
-
     return reviews
 
 def display_radar(reviews):
@@ -166,20 +169,25 @@ def get_gps_coordinate(place):
     return lat, lon
 
 def get_ad_with_gps(ad, answer_places):
-    places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : "
+    places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : \n"
 
     list_of_places = extract_list(answer_places)
     print(list_of_places)
 
-    for place in list_of_places:
-        lat, lon = get_gps_coordinate(place)
-        places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
-        time.sleep(1)
+    if ((list_of_places != []) & (list_of_places != [''])):
 
-    if list_of_places:
+        for place in list_of_places:
+            lat, lon = get_gps_coordinate(place)
+            places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
+            time.sleep(1)
+
         ad_desc_improved = ad + places_gps
     else:
         places_gps = ""
         ad_desc_improved = ad
     
     return places_gps, ad_desc_improved
+
+def calculate_time(start, end):
+    time = f"{round(end-start, 2)}s"
+    return time
