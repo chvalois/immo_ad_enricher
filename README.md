@@ -1,9 +1,13 @@
 # Immo Ad Analyzer
 ==================
 
-Mise en pratique de l'apprentissage des LLM.
-
 Cette application permet d'analyser la description des annonces de biens immobiliers à l'aide de LLM.
+
+Stack : 
+- Langchain
+- Langsmith
+- API Open AI
+- Streamlit
 
 A partir d'une annonce, l'application renvoie 3 rubriques : 
 
