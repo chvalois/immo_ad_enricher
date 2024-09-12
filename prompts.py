@@ -15,7 +15,7 @@ Pour cela, n'hésite pas à proposer les coordonnées d'un polygone assez grand 
 En sortie, je souhaite que tu communiques un ensemble de coordonnées sous forme de polygone compatible Geopandas au format WGS84, 
 avec un degré de confiance en pourcentage et le raisonnement qui t'a conduit à faire ces propositions.
 
-Coordonnées du polygone :  \n
+Coordonnées du polygone : [[lat1, lon1], [lat2, lon2], [lat3, lon3], [lat4, lon4]] \n
 Degré de confiance :  \n
 Raisonnement :  \n
 """
