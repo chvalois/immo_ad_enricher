@@ -16,6 +16,31 @@ output_ad1 = """
     3. En se basant sur ces informations, le polygone proposé englobe la zone autour de la station de métro "Belleville" et du quartier Belleville à Paris, offrant une couverture probable de la zone où se trouve le bien immobilier mentionné dans l'annonce.
     """
 
+output_immoreview_ad1 = """
+Voici l'évaluation de l'annonce pour le bien immobilier décrit :
+
+Taille du bien : 5/10
+Avec une superficie de 22 m², l'appartement est relativement petit, ce qui peut convenir à un investisseur ou à une personne seule, mais limite son attrait pour une famille.
+
+Luminosité du bien : 8/10
+Le séjour est décrit comme "lumineux exposé sud-ouest", ce qui est un atout majeur pour la luminosité de l'appartement. Cela suggère une bonne exposition à la lumière naturelle.
+
+Proche des commerces : 9/10
+L'annonce mentionne que l'appartement est situé "proche des commerces et restaurants" dans un quartier vivant, ce qui indique une excellente accessibilité aux commodités.
+
+Proche de la nature : 6/10
+L'annonce ne mentionne pas directement la proximité de parcs ou d'espaces verts, mais le jardin sans vis-à-vis peut offrir un petit espace naturel. Cependant, l'absence de détails sur des espaces naturels à proximité limite la note.
+
+Environs calmes et sans nuisance sonore : 7/10
+Bien que le quartier soit vivant, l'appartement est décrit comme ayant un "joli jardin orienté sud, sans vis-à-vis", ce qui suggère un certain niveau de tranquillité, mais la proximité des commerces peut engendrer des nuisances sonores.
+
+Modernité du bien : 8/10
+L'appartement est décrit comme ayant un espace optimisé avec une cuisine ouverte aménagée et un agencement fonctionnel, ce qui indique une certaine modernité. Toutefois, des détails supplémentaires sur les équipements modernes auraient pu renforcer cette note.
+
+Bonus du bien : 7/10
+Bien que l'appartement ne dispose pas de bonus tels qu'une piscine ou une terrasse, le jardin sans vis-à-vis est un atout appréciable. De plus, l'agencement optimisé et l'espace en alcôve pour un coin nuit ajoutent de la valeur.
+"""
+
 input_ad2 = """
 Vente appartement 202 230 €
 85 m²
@@ -83,8 +108,32 @@ output_ad2 = """
     4. Les coordonnées du polygone sont déterminées autour de Brumath, en prenant en compte sa position géographique par rapport à Strasbourg et les informations fournies dans l'annonce.
     """
 
+output_immoreview_ad2 = """
+Voici l'évaluation de l'annonce pour le bien immobilier décrit :
+
+Taille du bien : 8/10
+Avec 85 m² pour un appartement de 4 pièces, la taille est raisonnable et adaptée pour une famille ou un investisseur. Cela mérite une bonne note.
+
+Luminosité du bien : 7/10
+Le séjour est décrit comme "lumineux", ce qui est un bon indicateur de luminosité. Toutefois, le manque d'informations sur l'orientation des fenêtres ou d'autres éléments pouvant influencer la luminosité empêche d'atteindre une note maximale.
+
+Proche des commerces : 8/10
+L'annonce mentionne que l'appartement est situé "à proximité de toute commodité", ce qui indique une bonne accessibilité aux commerces. Cela mérite une note élevée, bien que des détails supplémentaires sur la distance ou le type de commerces auraient pu justifier une note parfaite.
+
+Proche de la nature : 5/10
+L'annonce ne fait pas mention de la proximité de parcs ou d'espaces naturels. En l'absence d'informations sur ce point, la note est neutre.
+
+Environs calmes et sans nuisance sonore : 6/10
+Bien que l'appartement soit situé dans une petite copropriété et à 20 minutes du centre-ville de Strasbourg, il n'y a pas d'indication explicite sur le niveau de bruit ambiant. Cela laisse supposer un environnement relativement calme, mais pas garanti.
+
+Modernité du bien : 7/10
+L'appartement dispose d'équipements modernes comme une cuisine ouverte aménagée et équipée, ainsi que des menuiseries en double vitrage. Cependant, l'âge de la construction n'est pas précisé, ce qui empêche d'atteindre une note plus élevée.
+
+Bonus du bien (comme piscine, terrasse, dépendance) : 9/10
+L'appartement bénéficie d'une belle terrasse de 10 m², d'un garage en box, d'une place de parking et d'une cave. Ces éléments ajoutent une valeur significative au bien, justifiant une note élevée."""
+
+
 input_wrong1 = "What did the cow say to the moon?"
 output_wrong1 = "Ceci ne semble pas correspondre à une annonce immobilière"
-
 input_wrong2 = "Write me a poem about the moon"
 output_wrong2 = "Ceci ne semble pas correspondre à une annonce immobilière"

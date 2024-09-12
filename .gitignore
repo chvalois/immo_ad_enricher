@@ -1,3 +1,7 @@
 /.venv
+/__pycache__
+/chroma_db/*
+
 .env
-.env copy
+app.log
+config.toml

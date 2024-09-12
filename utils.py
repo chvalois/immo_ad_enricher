@@ -1,6 +1,8 @@
 import re
 import plotly.express as px
 import pandas as pd
+import requests
+import time
 
 def extract_polygon(text):
     # Regex pattern to match [[]]
@@ -13,6 +15,26 @@ def extract_polygon(text):
     # Convert matches to float and back to list format
     polygon = [[float(lat), float(lon)] for lat, lon in matches]
     return polygon
+
+def extract_list(text):
+    # Regex pattern to match [[]]
+    list_pattern = r'\[(.*?)\]'
+    
+    # Use re.search to find the list within square brackets
+    match = re.search(list_pattern, text)
+
+    # Check if there was a match
+    if match:
+        # Extract the captured list (removing any quotes)
+        extracted_list = match.group(1)
+        
+        # Split the result by commas to get individual items
+        extracted_list = [item.strip().strip('"') for item in extracted_list.split(',')]
+    else:
+        extracted_list = []
+        print("No list found")
+    
+    return extracted_list
 
 def generate_polygon_on_map(text):
 
@@ -92,16 +114,72 @@ def extract_reviews(text):
 
 def display_radar(reviews):
     df = pd.DataFrame(list(reviews.items()), columns=['critere', 'note'])
-
-    print(df.head())
     fig = px.line_polar(df, r='note', theta='critere', line_close=True)
     fig.update_traces(fill='toself')
+
+    # Set maximum radial axis value to 10
+    fig.update_layout(
+        polar=dict(
+            radialaxis=dict(
+                range=[0, 10],  # Set range from 0 to 10
+                tickvals=[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]  # Custom tick values
+            )
+        )
+    )
+
     return fig
 
 
-# Function to display stars based on a rating (out of 10)
-def display_stars(rating, max_rating=10):
-    stars = "⭐" * int(rating / max_rating * 5)  # Convert 0-10 scale to 0-5 stars
+def get_gps_coordinate(place): 
+
+    # Define the base URL for the API
+    url = "https://nominatim.openstreetmap.org/search"
+
+    # Get a copy of the default headers that requests would use
+    headers = requests.utils.default_headers()
+
+    headers.update(
+        {
+        'User-Agent': 'My User Agent 1.0',
+        }
+    )
+
+    # Define the parameters for the query
+    params = {
+        'q': place,  # Replace this with the address or location
+        'format': 'json',  # Specify the response format as JSON
+        'limit': 1,  # Return only one result
+        'addressdetails': 1  # Include detailed address information in the result
+    }
+
+    # Send the GET request to the API
+    response = requests.get(url, params=params, headers=headers)
+
+    if response.status_code != 204:
+
+        # Parse the response as JSON
+        data = response.json()
+
+        lat = data[0]['lat']
+        lon = data[0]['lon']
+
+    return lat, lon
+
+def get_ad_with_gps(ad, answer_places):
+    places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : "
+
+    list_of_places = extract_list(answer_places)
+    print(list_of_places)
+
+    for place in list_of_places:
+        lat, lon = get_gps_coordinate(place)
+        places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
+        time.sleep(1)
+
+    if list_of_places:
+        ad_desc_improved = ad + places_gps
+    else:
+        places_gps = ""
+        ad_desc_improved = ad
     
-    # st.write("Rating: ", rating)
-    # st.write(display_stars(rating))
+    return places_gps, ad_desc_improved

@@ -1,16 +1,22 @@
 import os
+import argparse
 import pdfplumber
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_core.documents import Document
 from langchain_community.vectorstores import Chroma
 from langchain_openai import OpenAIEmbeddings
 
-def extract_elements_from_pdf(filepaths):
+from dotenv import load_dotenv
+load_dotenv()
+
+MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')
+
+def extract_elements_from_pdf(filepaths, collection_name):
     """ extract elements from pdf with partition_pdf"""
 
     documents = []
 
-    pdf_files = [file for file in os.listdir(filepaths) if file.endswith('.pdf')]
+    pdf_files = [os.path.join(filepaths, file) for file in os.listdir(filepaths) if file.endswith('.pdf')]
     print(pdf_files)
 
     for pdf_path in pdf_files:
@@ -39,12 +45,32 @@ def extract_elements_from_pdf(filepaths):
                     print(doc)
                     print('\n\n')
 
-    embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
+    embeddings = OpenAIEmbeddings(model=MODEL_EMBEDDING)
 
-    vector_store = Chroma(
-        collection_name="example_collection",
+    vectorstore = Chroma(
+        collection_name=collection_name,
         embedding_function=embeddings,
-        persist_directory="./chroma_langchain_db",  # Where to save data locally, remove if not neccesary
+        persist_directory=f"./chroma_db/{collection_name}"
     )
 
-    pass
+    # Add documents to the vector store
+    vectorstore.add_documents(documents)
+
+    # Optionally, check the number of documents added
+    print(f"Number of documents in the vector store: {len(documents)}")
+
+# Create an argument parser
+def main():
+    parser = argparse.ArgumentParser(description='Function to fill a Chroma DB with PDF documents content.')
+    parser.add_argument('--filepath', type=str, required=True, help='Filepath of the PDF documents')
+    parser.add_argument('--collection_name', type=str, required=True, help='Collection Name for the Chroma DB')
+    
+    # Parse the command-line arguments
+    args = parser.parse_args()
+
+    # Call your function with the arguments
+    extract_elements_from_pdf(args.filepath, args.collection_name)
+
+# Ensure the script runs when executed with python -m
+if __name__ == "__main__":
+    main()
