@@ -9,6 +9,8 @@ Stack :
 - API Open AI
 - Streamlit
 
+![Ecran d'accueil de l'application](resources/immo_home.png)
+
 A partir d'une annonce, l'application renvoie 3 rubriques : 
 
 **1. Review du bien immobilier**
