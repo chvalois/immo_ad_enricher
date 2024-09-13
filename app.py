@@ -2,9 +2,9 @@ import streamlit as st
 import logging
 import time
 
-from llm import get_immo_xy_gpt4_fewshots, get_ad_content, get_immo_review, get_immo_rewrite, get_immo_places
+from llm import get_immo_xy_gpt4_fewshots, get_immo_review, get_immo_rewrite, get_immo_places
 from prompts import template_immo_gps, template_immo_review, template_immo_rewrite, template_immo_places
-from utils import generate_polygon_on_map, extract_reviews, display_radar, extract_list, get_gps_coordinate, get_ad_with_gps, calculate_time
+from utils import generate_polygon_on_map, extract_reviews, display_radar, get_ad_with_gps, calculate_time
 
 st.cache_data.clear()
 st.cache_resource.clear()

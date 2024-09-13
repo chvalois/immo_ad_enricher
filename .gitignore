@@ -1,7 +1,6 @@
 /.venv
 /__pycache__
 /chroma_db/*
-
 .env
-app.log
+*.log
 config.toml
