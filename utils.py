@@ -195,7 +195,6 @@ def display_radar(reviews):
     return fig
 
 def get_user_agent():
-    st.set_page_config(layout="wide")
     browser = browser_detection_engine(singleRun=False)
     user_agent = browser['userAgent']
     return user_agent
