@@ -206,7 +206,7 @@ def get_gps_coordinate(place):
     lon : float
     """ 
 
-    lat, lon = 0.0000
+    lat, lon = (0.0000, 0.0000)
 
     # Define the base URL for the API
     url = "https://nominatim.openstreetmap.org/search"
