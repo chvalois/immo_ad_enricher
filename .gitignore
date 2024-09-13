@@ -1,6 +1,6 @@
 /.venv
 /__pycache__
-/chroma_db/*
+/context
 .env
 *.log
 config.toml
