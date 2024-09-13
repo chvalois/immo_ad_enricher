@@ -48,11 +48,11 @@ if st.button("Lancer l'analyse"):
         with st.spinner('Veuillez patienter ..'):
             answer_places = get_immo_places(ad_desc, template_immo_places)
             places_gps, ad_desc_improved = get_ad_with_gps(ad_desc, answer_places)
-            st.write(places_gps)
 
             answer_gps = get_immo_xy_gpt4_fewshots(ad_desc_improved, template_immo_gps)
 
             st.subheader("Coordonnées probables du bien immobilier")
+            st.write(places_gps)
             fig = generate_polygon_on_map(answer_gps)
             st.plotly_chart(fig)
             st.write(answer_gps)

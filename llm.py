@@ -40,6 +40,11 @@ def get_db_vectorstore(examples):
     """ 
 
     to_vectorize = [" ".join(example.values()) for example in examples]
+
+    # Ensure that none of the texts are None or empty
+    if not to_vectorize or any(not text for text in to_vectorize):
+        raise ValueError("The examples contain invalid or empty values.")
+    
     embeddings = OpenAIEmbeddings()
 
     vectorstore = None
