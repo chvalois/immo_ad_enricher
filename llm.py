@@ -26,31 +26,18 @@ MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')
 from examples import input_ad1, input_ad2, input_ad3, input_wrong1, input_wrong2, output_ad1, output_ad2, output_ad3, \
 output_wrong1, output_wrong2, output_immoreview_ad1, output_immoreview_ad2
 
-def get_ad_content(url):
-    # Deprecated: to be kept in case we parse URLs only
-    loader = WebBaseLoader(url)
-
-    pages = []
-    for doc in loader.lazy_load():
-        pages.append(doc)
-
-    # Parser le HTML et filtrer les parties indésirables avec BeautifulSoup
-    soup = BeautifulSoup(pages[0].page_content, "html.parser")
-
-    # Sélectionner les parties spécifiques, par exemple un article
-    content = soup.select_one("div")  # Sélecteur CSS qui correspond au contenu principal
-
-    # Récupérer le texte de la partie sélectionnée
-    if content:
-        page_text = content.get_text()
-
-    print(soup)
-    title = pages[0].metadata['title']
-    description = pages[0].metadata['title']
-
-    return title, description, page_text
-
 def get_db_vectorstore(examples):
+    """
+    Génère une base de données de vecteurs à partir d'exemples pour entraîner le modèle LLM
+
+    Paramètres
+    -------
+    examples : dict
+    
+    Retourne
+    -------
+    example_selector : base de données de vecteurs d'exemples pour une réponse de type FewShot du LLM
+    """ 
 
     to_vectorize = [" ".join(example.values()) for example in examples]
     embeddings = OpenAIEmbeddings()
@@ -68,7 +55,19 @@ def get_db_vectorstore(examples):
     return example_selector
 
 def get_immo_xy_gpt4_fewshots(ad, template) :
+    """
+    Retourne la réponse du LLM quant aux coordonnées probables d'un bien immobilier à partir d'une annonce
 
+    Paramètres
+    -------
+    ad : str
+    template : str | prompt utilisé pour générer la réponse
+    
+    Retourne
+    -------
+    answer : str
+    """ 
+        
     examples = [
     {"input": input_ad1, "output": output_ad1},
     {"input": input_ad2, "output": output_ad2},
@@ -106,6 +105,18 @@ def get_immo_xy_gpt4_fewshots(ad, template) :
 
 
 def get_immo_review(ad, template):
+    """
+    Retourne la réponse du LLM quant à la review de la description du bien immobilier
+
+    Paramètres
+    -------
+    ad : str
+    template : str | prompt utilisé pour générer la réponse
+    
+    Retourne
+    -------
+    answer : str
+    """ 
 
     examples = [
     {"input": input_ad1, "output": output_immoreview_ad1},
@@ -161,6 +172,18 @@ def get_immo_review(ad, template):
 
     
 def get_immo_rewrite(ad, template):
+    """
+    Retourne la réponse du LLM quant à la réécriture de la description du bien immobilier
+
+    Paramètres
+    -------
+    ad : str
+    template : str | prompt utilisé pour générer la réponse
+    
+    Retourne
+    -------
+    answer : str
+    """ 
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -180,6 +203,18 @@ def get_immo_rewrite(ad, template):
 
 
 def get_immo_places(ad, template):
+    """
+    Retourne la réponse du LLM quant aux lieux identifiés dans la description du bien immobilier
+
+    Paramètres
+    -------
+    ad : str
+    template : str | prompt utilisé pour générer la réponse
+    
+    Retourne
+    -------
+    answer : str
+    """ 
 
     prompt = ChatPromptTemplate.from_messages(
         [
@@ -196,3 +231,43 @@ def get_immo_places(ad, template):
     answer = chain.invoke({"context": ad})
 
     return answer
+
+# ----------------------------------
+
+def get_ad_content(url):
+    """
+    #! Pas utilisé dans le code, à conserver si on souhaite parser le contenu d'une URL
+    Renvoie le titre, la description et le contenu d'une URL
+
+    Paramètres
+    -------
+    url : str
+    
+    Retourne
+    -------
+    title : str
+    description : str
+    page_text : str
+    """ 
+
+    loader = WebBaseLoader(url)
+
+    pages = []
+    for doc in loader.lazy_load():
+        pages.append(doc)
+
+    # Parser le HTML et filtrer les parties indésirables avec BeautifulSoup
+    soup = BeautifulSoup(pages[0].page_content, "html.parser")
+
+    # Sélectionner les parties spécifiques, par exemple un article
+    content = soup.select_one("div")  # Sélecteur CSS qui correspond au contenu principal
+
+    # Récupérer le texte de la partie sélectionnée
+    if content:
+        page_text = content.get_text()
+
+    print(soup)
+    title = pages[0].metadata['title']
+    description = pages[0].metadata['title']
+
+    return title, description, page_text

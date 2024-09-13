@@ -5,6 +5,18 @@ import requests
 import time
 
 def extract_polygon(text):
+    """
+    Retourne une liste de [Latitude, Longitude] permettant de générer un polygone via Regex
+
+    Paramètres
+    -------
+    text : str | texte brut issu du LLM
+    
+    Retourne
+    -------
+    polygon : list
+    """ 
+
     # Regex pattern to match [[]]
     polygon_pattern = r'\[\s*(-?\d+\.\d+)\s*,\s*(-?\d+\.\d+)\s*\]'
     
@@ -23,6 +35,18 @@ def extract_polygon(text):
 
 
 def extract_list(text):
+    """
+    Retourne une liste au sein d'un texte via Regex
+
+    Paramètres
+    -------
+    text : str | texte brut issu du LLM
+    
+    Retourne
+    -------
+    extracted_list : list
+    """ 
+        
     # Regex pattern to match [[]]
     list_pattern = r'\[(.*?)\]'
     
@@ -42,23 +66,19 @@ def extract_list(text):
     
     return extracted_list
 
-def generate_polygon_on_map(text):
-
-    polygon = extract_polygon(text)
-    print(polygon)
-    lat, lon = zip(*polygon)
-
-    # Create Plotly map with Mapbox
-    fig = px.scatter_mapbox(
-        lat=lat,
-        lon=lon,
-        mapbox_style="open-street-map",  # You can change this to 'satellite', 'outdoors', etc.
-        zoom=13
-    )
-    fig.update_traces(mode='lines+markers')
-    return fig
-
 def extract_reviews(text):
+    """
+    Retourne les notes attribués à chaque élément de l'annonce via Regex
+
+    Paramètres
+    -------
+    text : str | texte brut issu du LLM
+    
+    Retourne
+    -------
+    reviews : dict
+    """ 
+
     # Define a dictionary to store the extracted ratings
     reviews = {}
 
@@ -115,7 +135,46 @@ def extract_reviews(text):
 
     return reviews
 
+def generate_polygon_on_map(text):
+    """
+    Génère un polygone sur une cartographie Mapbox via Plotly
+
+    Paramètres
+    -------
+    text : str | texte brut issu du LLM
+    
+    Retourne
+    -------
+    fig : figure ploty express
+    """ 
+
+    polygon = extract_polygon(text)
+    print(polygon)
+    lat, lon = zip(*polygon)
+
+    # Create Plotly map with Mapbox
+    fig = px.scatter_mapbox(
+        lat=lat,
+        lon=lon,
+        mapbox_style="open-street-map",  # You can change this to 'satellite', 'outdoors', etc.
+        zoom=13
+    )
+    fig.update_traces(mode='lines+markers')
+    return fig
+
 def display_radar(reviews):
+    """
+    Génère un graphique de type Radar Plot via Plotly à partir des reviews
+
+    Paramètres
+    -------
+    reviews : dict
+    
+    Retourne
+    -------
+    fig : figure ploty express
+    """ 
+
     df = pd.DataFrame(list(reviews.items()), columns=['critere', 'note'])
     fig = px.line_polar(df, r='note', theta='critere', line_close=True)
     fig.update_traces(fill='toself')
@@ -134,6 +193,18 @@ def display_radar(reviews):
 
 
 def get_gps_coordinate(place): 
+    """
+    Retourne les coordonnées GPS les plus probables d'un lieu via API Nominatim
+
+    Paramètres
+    -------
+    place : str | nom d'une rue et de la ville ou quartier ou bâtiment
+    
+    Retourne
+    -------
+    lat : float
+    lon : float
+    """ 
 
     # Define the base URL for the API
     url = "https://nominatim.openstreetmap.org/search"
@@ -169,6 +240,20 @@ def get_gps_coordinate(place):
     return lat, lon
 
 def get_ad_with_gps(ad, answer_places):
+    """
+    Retourne l'annonce origine enrichie des lieux identifiés dans l'annonce et de leurs coordonnées GPS
+
+    Paramètres
+    -------
+    ad : str | annonce origine
+    answer_places : str | réponse du LLM sur les lieux identifiés dans l'annonce
+    
+    Retourne
+    -------
+    places_gps : str | lieux identifiés avec leurs coordonnées gps
+    ad_desc_improved : str | annonce enrichie de la liste des lieux identifiés
+    """ 
+        
     places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : \n"
 
     list_of_places = extract_list(answer_places)
@@ -189,5 +274,18 @@ def get_ad_with_gps(ad, answer_places):
     return places_gps, ad_desc_improved
 
 def calculate_time(start, end):
+    """
+    Retourne le temps écoulé entre start et end
+
+    Paramètres
+    -------
+    start : float
+    end : float
+    
+    Retourne
+    -------
+    time : float
+    """ 
+        
     time = f"{round(end-start, 2)}s"
     return time
