@@ -195,11 +195,16 @@ def display_radar(reviews):
     return fig
 
 def get_user_agent():
-    browser = browser_detection_engine(singleRun=False)
-    user_agent = browser['userAgent']
+    try:
+        browser = browser_detection_engine(singleRun=True)
+        user_agent = browser['userAgent']
+    except:
+        user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"    
+
+    # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"    
     return user_agent
 
-def get_gps_coordinate(place): 
+def get_gps_coordinate(place, user_agent): 
     """
     Retourne les coordonnées GPS les plus probables d'un lieu via API Nominatim
 
@@ -221,7 +226,6 @@ def get_gps_coordinate(place):
     # Get a copy of the default headers that requests would use
     headers = requests.utils.default_headers()
 
-    user_agent = get_user_agent()
     headers.update(
         {
         'User-Agent': user_agent,
@@ -238,7 +242,6 @@ def get_gps_coordinate(place):
 
     # Send the GET request to the API
     response = requests.get(url, params=params, headers=headers)
-    print(response)
 
     if response.status_code == 200:
 
@@ -250,7 +253,7 @@ def get_gps_coordinate(place):
 
     return lat, lon
 
-def get_ad_with_gps(ad, answer_places):
+def get_ad_with_gps(ad, answer_places, user_agent):
     """
     Retourne l'annonce origine enrichie des lieux identifiés dans l'annonce et de leurs coordonnées GPS
 
@@ -258,6 +261,7 @@ def get_ad_with_gps(ad, answer_places):
     -------
     ad : str | annonce origine
     answer_places : str | réponse du LLM sur les lieux identifiés dans l'annonce
+    user_agent : str
     
     Retourne
     -------
@@ -273,7 +277,7 @@ def get_ad_with_gps(ad, answer_places):
     if ((list_of_places != []) & (list_of_places != [''])):
 
         for place in list_of_places:
-            lat, lon = get_gps_coordinate(place)
+            lat, lon = get_gps_coordinate(place, user_agent)
 
             if (lat != 0.0000) and (lon != 0.0000):
                 places_gps = places_gps + (f"{place}: {lat}, {lon} \n")

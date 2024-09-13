@@ -155,8 +155,74 @@ Raisonnement :
 4. Les points de coordonnées créent un espace suffisamment grand autour de la gare, en respectant la zone mentionnée dans l'annonce, ce qui garantit que le bien immobilier proposé se situe bien à l'intérieur du polygone dans le quartier de Val Fleury à Meudon.
 """
 
+input_places_ad1 = """
+BORDEAUX JARDIN PUBLIC
 
-input_wrong1 = "What did the cow say to the moon?"
+Située à proximité immédiate du Jardin Public, cette belle maison en pierre est agrémentée d'une terrasse en rooftop de 25 m². Elle vous propose au rez-de-chaussée une belle pièce de réception avec des murs en pierres apparentes. La cuisine ouverte est équipée et dispose d'un cellier. Son escalier en pierre mène au premier étage. Le palier dessert trois chambres avec parquets et une salle d'eau. Au deuxième et dernier étage un salon d'été s'ouvre sur une agréable terrasse tropézienne sans vis-à-vis ! Un bien de qualité dans un secteur calme et résidentiel en plein centre ville à venir découvrir.
+Contactez-nous au 05 56 00 25 00 ou au 05 56 45 51 01
+"""
+
+output_places_ad1 = """
+[Jardin Public (Bordeaux)]
+"""
+
+input_places_ad2 = """
+Paris, Idéalement situé entre le Square Louvois et le Jardin du Palais Royal, cet appartement traversant de 103,21 (102,21 m2 Carrez), 
+u charme incontestable, prend place au cinquième étage (avant-dernier étage) d'un immeuble datant du 17ème siècle (ascenseur à l'étude). 
+
+L'ensemble, nécessitant une rénovation complète, se compose de trois pièces principales : deux donnant sur la rue et deux autres donnant sur une cour intérieure, 
+offrant une modularité intéressante des espaces et la possibilité d'une rénovation sur mesure. Une cuisine ainsi qu'une salle de bains complètent cet espace. 
+
+Le charme de l'ancien, caractérisé par les poutres apparentes et les deux magnifiques cheminées d'époque, associé au potentiel de rénovation, 
+font de cet appartement un bien rare au sein d'un quartier hyper prisé. Une cave vient compléter ce bien soumis au statut de la copropriété. 
+
+Métro Pyramides, Palais Royal et Quatre septembre (lignes 1, 3, 7 et 14)
+"""
+
+output_places_ad2 = """
+[Square Louvois (Paris), Jardin du Palais Royal (Paris)]
+"""
+
+
+input_wrong1 = "Quels sont les documents utilisés dans cette application ?"
 output_wrong1 = "Ceci ne semble pas correspondre à une annonce immobilière"
-input_wrong2 = "Write me a poem about the moon"
-output_wrong2 = "Ceci ne semble pas correspondre à une annonce immobilière"
+
+input_wrong2 = "Ecris moi une annonce immobilière pour une maison à Bordeaux"
+output_wrong2 = "Je suis une application qui analyse les annonces immobilières, mais je ne suis pas habilité à rédiger une annonce à la demande."
+
+input_wrong3 = """
+Description
+En tant que passionné de PC gamer, j'ai décidé de lancer mon entreprise pour proposer, selon mon point de vue, les meilleurs PC gamer possibles. Je suis ici avant tout pour t'aider à faire le bon choix !
+
+Mon entreprise MFP Computer te présente le PC GAMER “Nexus”, construit à partir de composant complétement neuf !
+
+🟦Processeur: Ryzen 7 5700X (neuf)
+
+🟦Ventirad: Thermalright AssassinX120 SE ARGB (neuf)
+
+🟦Carte mère: MSI B550 PRO-VDH (neuf)
+
+🟦RAM: Team Group 16 GB (2x8) DDR4-3200 (neuf)
+
+🟦Carte graphique: RTX 4070 SUPER 12GB MSI VENTUS (neuf)
+
+🟦SSD: 1To Kingston NV2 NVMe M.2 (neuf)
+
+🟦Alimentation: Seasonic B12 BC-750 750W 80 Plus Bronze (neuf)
+
+🟦Boîtier: MSI 112R (neuf)
+
+-Windows 11 PRO installé + activé✅
+-Pc déjà monté, prêt à l'emploi
+
+🎮Performances du pc disponible en photos !🎮
+
+Rendez-vous sur notre site internet (mfpcomputer.com) pour plus de photos, détails et d'options !
+
+✅ 2 ans de garantie sur tous les composants ✅
+
+▶️Prix : 1279€ ✅ (FERME et PAS D'ÉCHANGES)
+▶️Envoi possible ✅
+☎️N'hésitez pas à nous contacter, on vous répondra avec plaisir ! 😊
+"""
+output_wrong3 = "Ceci ne semble pas correspondre à une annonce immobilière"

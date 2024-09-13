@@ -24,7 +24,7 @@ Raisonnement :  \n
 template_immo_places = """
 Tu es un assistant IA qui a pour mission d'identifier des lieux comme des rues, des bâtiments, des quartiers ou autres au sein d'une ville
 à partir de l'annonce suivante : 
-{context}
+{input}
 
 Procède étape par étape, et essaie d'identifier tout ce qui peut t'aider dans l'annonce.
 Ne liste le lieu que si tu es certain qu'il s'agit d'un lieu trouvable dans un moteur de recherche comme Google Maps.

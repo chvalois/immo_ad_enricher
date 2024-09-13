@@ -22,10 +22,11 @@ MODEL_OPENAI = os.getenv('MODEL_OPENAI')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')
 
-from examples import input_ad1, input_ad2, input_ad3, input_wrong1, input_wrong2, output_ad1, output_ad2, output_ad3, \
-output_wrong1, output_wrong2, output_immoreview_ad1, output_immoreview_ad2
+from examples import input_ad1, input_ad2, input_ad3, output_ad1, output_ad2, output_ad3, input_wrong1, input_wrong2, input_wrong3,  \
+output_wrong1, output_wrong2, output_wrong3, output_immoreview_ad1, output_immoreview_ad2, input_places_ad1, input_places_ad2, \
+output_places_ad1, output_places_ad2
 
-def get_db_vectorstore(examples):
+def get_db_vectorstore(examples, examples_type):
     """
     Génère une base de données de vecteurs à partir d'exemples pour entraîner le modèle LLM
 
@@ -49,7 +50,7 @@ def get_db_vectorstore(examples):
     vectorstore = None
 
     try:
-        vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples, persist_directory="./chroma_db/gps_examples_db")
+        vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples, persist_directory=f"./chroma_db/{examples_type}")
     except Exception as e:
         print(f"Error creating vectorstore: {e}")
 
@@ -84,9 +85,10 @@ def get_immo_xy_gpt4_fewshots(ad, template) :
     {"input": input_ad3, "output": output_ad3},
     {"input": input_wrong1, "output": output_wrong1},
     {"input": input_wrong2, "output": output_wrong2},
+    {"input": input_wrong3, "output": output_wrong3},
 ]
 
-    example_selector = get_db_vectorstore(examples)
+    example_selector = get_db_vectorstore(examples, examples_type="examples_gps")
     # Define the few-shot prompt.
     few_shot_prompt = FewShotChatMessagePromptTemplate(
     # The input variables select the values to pass to the example_selector
@@ -133,9 +135,10 @@ def get_immo_review(ad, template):
     {"input": input_ad2, "output": output_immoreview_ad2},
     {"input": input_wrong1, "output": output_wrong1},
     {"input": input_wrong2, "output": output_wrong2},
+    {"input": input_wrong3, "output": output_wrong3},
 ]
 
-    example_selector = get_db_vectorstore(examples)
+    example_selector = get_db_vectorstore(examples, examples_type="examples_reviews")
     # Define the few-shot prompt.
     few_shot_prompt = FewShotChatMessagePromptTemplate(
     # The input variables select the values to pass to the example_selector
@@ -226,10 +229,30 @@ def get_immo_places(ad, template):
     answer : str
     """ 
 
-    prompt = ChatPromptTemplate.from_messages(
+    examples = [
+    {"input": input_places_ad1, "output": output_places_ad1},
+    {"input": input_places_ad2, "output": output_places_ad2},
+    {"input": input_wrong1, "output": output_wrong1},
+    {"input": input_wrong2, "output": output_wrong2},
+    {"input": input_wrong3, "output": output_wrong3},
+]
+
+    example_selector = get_db_vectorstore(examples, examples_type="examples_places")
+    # Define the few-shot prompt.
+    few_shot_prompt = FewShotChatMessagePromptTemplate(
+    # The input variables select the values to pass to the example_selector
+        input_variables=["input"],
+        example_selector=example_selector,
+        example_prompt=ChatPromptTemplate.from_messages(
+            [("human", "{input}"), ("ai", "{output}")]
+        ),
+    )
+
+    final_prompt = ChatPromptTemplate.from_messages(
         [
             ("system", template),
-            ("human", "{context}"),
+            few_shot_prompt,
+            ("human", "{input}"),
         ]
     )
 
@@ -237,8 +260,8 @@ def get_immo_places(ad, template):
 
     llm = ChatOpenAI(model=MODEL_OPENAI, temperature=0.3)
 
-    chain = prompt | llm | parser
-    answer = chain.invoke({"context": ad})
+    chain = final_prompt | llm | parser
+    answer = chain.invoke({"input": ad})
 
     return answer
 

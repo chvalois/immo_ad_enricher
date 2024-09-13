@@ -17,6 +17,9 @@ st.cache_data.clear()
 st.cache_resource.clear()
 st.set_page_config(layout="wide")
 
+user_agent = get_user_agent()
+
+
 #### ---- Logging ---- ####
 
 logging.basicConfig(filename='app.log',   # Log file name
@@ -33,9 +36,8 @@ ad_desc = st.text_area("Copier / Coller ici la description de l'annonce. Inclure
 if st.button("Lancer l'analyse"):
 
     if ad_desc:
-
         start = time.time()
-        
+
         with st.spinner('Veuillez patienter ..'):
             logging.info("")
             answer_review = get_immo_review(ad_desc, template_immo_review)
@@ -51,7 +53,7 @@ if st.button("Lancer l'analyse"):
 
         with st.spinner('Veuillez patienter ..'):
             answer_places = get_immo_places(ad_desc, template_immo_places)
-            places_gps, ad_desc_improved = get_ad_with_gps(ad_desc, answer_places)
+            places_gps, ad_desc_improved = get_ad_with_gps(ad_desc, answer_places, user_agent)
 
             answer_gps = get_immo_xy_gpt4_fewshots(ad_desc_improved, template_immo_gps)
 
