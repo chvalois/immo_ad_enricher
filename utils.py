@@ -5,7 +5,7 @@ import requests
 import time
 import os
 
-USER_AGENT = os.getven('USER_AGENT')
+USER_AGENT = os.getenv('USER_AGENT')
 
 def extract_polygon(text):
     """
