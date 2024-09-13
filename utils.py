@@ -3,6 +3,9 @@ import plotly.express as px
 import pandas as pd
 import requests
 import time
+import os
+
+USER_AGENT = os.getven('USER_AGENT')
 
 def extract_polygon(text):
     """
@@ -216,7 +219,7 @@ def get_gps_coordinate(place):
 
     headers.update(
         {
-        'User-Agent': 'My User Agent 1.0',
+        'User-Agent': USER_AGENT,
         }
     )
 
