@@ -2,6 +2,10 @@ import streamlit as st
 import logging
 import time
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 from llm import get_immo_xy_gpt4_fewshots, get_immo_review, get_immo_rewrite, get_immo_places
 from prompts import template_immo_gps, template_immo_review, template_immo_rewrite, template_immo_places
 from utils import generate_polygon_on_map, extract_reviews, display_radar, get_ad_with_gps, calculate_time
