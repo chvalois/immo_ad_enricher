@@ -206,6 +206,8 @@ def get_gps_coordinate(place):
     lon : float
     """ 
 
+    lat, lon = 0.0000
+
     # Define the base URL for the API
     url = "https://nominatim.openstreetmap.org/search"
 
@@ -228,6 +230,7 @@ def get_gps_coordinate(place):
 
     # Send the GET request to the API
     response = requests.get(url, params=params, headers=headers)
+    print(response)
 
     if response.status_code != 204:
 
@@ -263,7 +266,9 @@ def get_ad_with_gps(ad, answer_places):
 
         for place in list_of_places:
             lat, lon = get_gps_coordinate(place)
-            places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
+
+            if (lat != 0.0000 & lon != 0.0000):
+                places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
             time.sleep(1)
 
         ad_desc_improved = ad + places_gps
