@@ -42,10 +42,16 @@ def get_db_vectorstore(examples):
     to_vectorize = [" ".join(example.values()) for example in examples]
     embeddings = OpenAIEmbeddings()
 
+    vectorstore = None
+
     try:
         vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples, persist_directory="./chroma_db/gps_examples_db")
     except Exception as e:
-        print(e)
+        print(f"Error creating vectorstore: {e}")
+
+    # Check if vectorstore was created successfully
+    if vectorstore is None:
+        raise ValueError("Failed to create vectorstore. Please check the logs for details.")
 
     example_selector = SemanticSimilarityExampleSelector(
     vectorstore=vectorstore,
