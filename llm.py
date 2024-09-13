@@ -18,7 +18,6 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from dotenv import load_dotenv
 load_dotenv()
 
-USER_AGENT = os.getenv('USER_AGENT')
 MODEL_OPENAI = os.getenv('MODEL_OPENAI')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')

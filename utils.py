@@ -4,8 +4,8 @@ import pandas as pd
 import requests
 import time
 import os
-
-USER_AGENT = os.getenv('USER_AGENT')
+import streamlit as st
+from browser_detection import browser_detection_engine
 
 def extract_polygon(text):
     """
@@ -194,6 +194,11 @@ def display_radar(reviews):
 
     return fig
 
+def get_user_agent():
+    st.set_page_config(layout="wide")
+    browser = browser_detection_engine(singleRun=False)
+    user_agent = browser['userAgent']
+    return user_agent
 
 def get_gps_coordinate(place): 
     """
@@ -217,9 +222,10 @@ def get_gps_coordinate(place):
     # Get a copy of the default headers that requests would use
     headers = requests.utils.default_headers()
 
+    user_agent = get_user_agent()
     headers.update(
         {
-        'User-Agent': USER_AGENT,
+        'User-Agent': user_agent,
         }
     )
 
