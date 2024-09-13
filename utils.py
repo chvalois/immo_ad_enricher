@@ -232,7 +232,7 @@ def get_gps_coordinate(place):
     response = requests.get(url, params=params, headers=headers)
     print(response)
 
-    if response.status_code != 204:
+    if response.status_code == 200:
 
         # Parse the response as JSON
         data = response.json()
