@@ -270,7 +270,7 @@ def get_ad_with_gps(ad, answer_places):
         for place in list_of_places:
             lat, lon = get_gps_coordinate(place)
 
-            if (lat != 0.0000 & lon != 0.0000):
+            if (lat != 0.0000) and (lon != 0.0000):
                 places_gps = places_gps + (f"{place}: {lat}, {lon} \n")
             time.sleep(1)
 
