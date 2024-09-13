@@ -12,7 +12,19 @@ load_dotenv()
 MODEL_EMBEDDING = os.getenv('MODEL_EMBEDDING')
 
 def extract_elements_from_pdf(filepaths, collection_name):
-    """ extract elements from pdf with partition_pdf"""
+    """
+    Génère une base de données de vecteurs à partir de fichiers PDF
+
+    Paramètres
+    -------
+    filepaths : str | emplacement des fichiers à 'embedder'
+    collection_name : str | nom identifiant la base de données
+    
+    Retourne
+    -------
+    Rien
+
+    """ 
 
     documents = []
 
@@ -61,6 +73,15 @@ def extract_elements_from_pdf(filepaths, collection_name):
 
 # Create an argument parser
 def main():
+    """
+    Appelle la fonction "extract_elements_from_pdf" en ligne de commande avec arguments
+
+    Arguments
+    -------
+    filepath : str | emplacement des fichiers à 'embedder'
+    collection_name : str | nom identifiant la base de données
+    """ 
+
     parser = argparse.ArgumentParser(description='Function to fill a Chroma DB with PDF documents content.')
     parser.add_argument('--filepath', type=str, required=True, help='Filepath of the PDF documents')
     parser.add_argument('--collection_name', type=str, required=True, help='Collection Name for the Chroma DB')

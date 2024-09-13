@@ -33,3 +33,27 @@ Un simple test de l'API Open AI.
 A partir d'un prompt personnalisé, l'API renvoie une description dans un style littéraire et légèrement sarcastique : 
 
 ![Réécriture de l'annonce](resources/immo_rewrite.png)
+
+# Utilisation de l'application
+==============================
+
+Création de votre environnement en local
+`python -m venv .venv`
+
+Activation de l'environnement sous windows
+`.venv\scripts\activate`
+
+Installation des packages
+`pip install -r requirements.txt`
+
+Dupliquer le contenu du fichier .env.example dans un fichier .env que vous devez créer à la racine du projet
+Et insérer vos clés API : 
+OPENAI_API_KEY (obligatoire)
+LANGCHAIN_API_KEY (non obligatoire)
+
+Lancement de l'application
+`streamlit run app.py`
+
+Pour utiliser votre propre RAG pour la génération des reviews, indiquer le répertoire contenant les fichiers PDF :
+`python -m context_docs --filepath "./path/to/your_pdf_files_directory" --collection_name "immo_review”`
+
