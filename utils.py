@@ -69,7 +69,7 @@ def extract_list(text):
     
     return extracted_list
 
-def extract_reviews(text):
+def extract_reviews(text, language):
     """
     Retourne les notes attribués à chaque élément de l'annonce via Regex
 
@@ -85,15 +85,26 @@ def extract_reviews(text):
     # Define a dictionary to store the extracted ratings
     reviews = {}
 
-    # Define regex to match the rating patterns
-    pattern_proche_comm = r"Proche des commerces : (\d+)/10"
-    pattern_calme = r"Environs calmes et sans nuisance sonore : (\d+)/10"
-    pattern_proche_nature = r"Proche de la nature : (\d+)/10"
-    pattern_moderne = r"Modernité du bien : (\d+)/10"
-    pattern_luminosite = r"Luminosité du bien : (\d+)/10"
-    pattern_taille = r"Taille du bien : (\d+)/10"
-    pattern_bonus = r"Bonus du bien \(comme piscine, terrasse, dépendance\) : (\d+)/10"
+    if language == 'EN':
+        # Define regex to match the rating patterns
+        pattern_proche_comm = r"Close to shops: (\d+)/10"
+        pattern_calme = r"Calm and quiet surroundings: (\d+)/10"
+        pattern_proche_nature = r"Close to nature: (\d+)/10"
+        pattern_moderne = r"Modernity of the property: (\d+)/10"
+        pattern_luminosite = r"Luminosity of the property: (\d+)/10"
+        pattern_taille = r"Size of the property: (\d+)/10"
+        pattern_bonus = r"Bonuses of the property: (\d+)/10"
     
+    else:
+        # Define regex to match the rating patterns
+        pattern_proche_comm = r"Proche des commerces : (\d+)/10"
+        pattern_calme = r"Environs calmes et sans nuisance sonore : (\d+)/10"
+        pattern_proche_nature = r"Proche de la nature : (\d+)/10"
+        pattern_moderne = r"Modernité du bien : (\d+)/10"
+        pattern_luminosite = r"Luminosité du bien : (\d+)/10"
+        pattern_taille = r"Taille du bien : (\d+)/10"
+        pattern_bonus = r"Bonus du bien \(comme piscine, terrasse, dépendance\) : (\d+)/10"
+        
     try:
         matches = re.findall(pattern_proche_comm, text)
         reviews['review_proche_comm'] = int(matches[0])
@@ -165,7 +176,7 @@ def generate_polygon_on_map(text):
     fig.update_traces(mode='lines+markers')
     return fig
 
-def display_radar(reviews):
+def display_radar(reviews, language):
     """
     Génère un graphique de type Radar Plot via Plotly à partir des reviews
 
@@ -179,6 +190,26 @@ def display_radar(reviews):
     """ 
 
     df = pd.DataFrame(list(reviews.items()), columns=['critere', 'note'])
+
+    if language == 'EN':
+        replace_dict = {'review_calme': 'Calm surroundings',
+                        'review_proche_nature': 'Close to nature',
+                        'review_moderne': 'Modernity',
+                        'review_luminosite': 'Luminosity',
+                        'review_taille': 'Size of the property',
+                        'review_bonus': 'Bonuses of the property',
+                        'review_proche_comm': 'Close to shops'}
+    else:
+        replace_dict = {'review_calme': 'Calme',
+                        'review_proche_nature': 'Proche de la nature',
+                        'review_moderne': 'Modernité du bien',
+                        'review_luminosite': 'Luminosité du bien',
+                        'review_taille': 'Taille du bien',
+                        'review_bonus': 'Bonus du bien',
+                        'review_proche_comm': 'Proche des commerces'}
+
+    df['critere'] = df['critere'].replace(replace_dict)
+
     fig = px.line_polar(df, r='note', theta='critere', line_close=True)
     fig.update_traces(fill='toself')
 
@@ -201,7 +232,6 @@ def get_user_agent():
     except:
         user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"    
 
-    # user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)"    
     return user_agent
 
 def get_gps_coordinate(place, user_agent): 
@@ -253,7 +283,7 @@ def get_gps_coordinate(place, user_agent):
 
     return lat, lon
 
-def get_ad_with_gps(ad, answer_places, user_agent):
+def get_ad_with_gps(ad, answer_places, user_agent, language):
     """
     Retourne l'annonce origine enrichie des lieux identifiés dans l'annonce et de leurs coordonnées GPS
 
@@ -269,7 +299,10 @@ def get_ad_with_gps(ad, answer_places, user_agent):
     ad_desc_improved : str | annonce enrichie de la liste des lieux identifiés
     """ 
         
-    places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : \n"
+    if language == 'EN':
+        places_gps = "\n Coordinates of places mentioned in the ad: \n"
+    else:
+        places_gps = "\n Coordonnées des lieux mentionnés dans l'annonce : \n"
 
     list_of_places = extract_list(answer_places)
     print(list_of_places)

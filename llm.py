@@ -26,7 +26,11 @@ from examples import input_ad1, input_ad2, input_ad3, output_ad1, output_ad2, ou
 output_wrong1, output_wrong2, output_wrong3, output_immoreview_ad1, output_immoreview_ad2, input_places_ad1, input_places_ad2, \
 output_places_ad1, output_places_ad2
 
-def get_db_vectorstore(examples, examples_type):
+from examples_EN import input_ad1_EN, input_ad2_EN, input_ad3_EN, output_ad1_EN, output_ad2_EN, output_ad3_EN, input_wrong1_EN, input_wrong2_EN, input_wrong3_EN,  \
+output_wrong1_EN, output_wrong2_EN, output_wrong3_EN, output_immoreview_ad1_EN, output_immoreview_ad2_EN, input_places_ad1_EN, input_places_ad2_EN, \
+output_places_ad1_EN, output_places_ad2_EN
+
+def get_db_vectorstore(examples, language, examples_type):
     """
     Génère une base de données de vecteurs à partir d'exemples pour entraîner le modèle LLM
 
@@ -50,7 +54,7 @@ def get_db_vectorstore(examples, examples_type):
     vectorstore = None
 
     try:
-        vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples, persist_directory=f"./chroma_db/{examples_type}")
+        vectorstore = Chroma.from_texts(to_vectorize, embeddings, metadatas=examples, persist_directory=f"./chroma_db/{examples_type}_{language}")
     except Exception as e:
         print(f"Error creating vectorstore: {e}")
 
@@ -65,7 +69,7 @@ def get_db_vectorstore(examples, examples_type):
 
     return example_selector
 
-def get_immo_xy_gpt4_fewshots(ad, template) :
+def get_immo_xy_gpt4_fewshots(ad, template, language) :
     """
     Retourne la réponse du LLM quant aux coordonnées probables d'un bien immobilier à partir d'une annonce
 
@@ -78,17 +82,30 @@ def get_immo_xy_gpt4_fewshots(ad, template) :
     -------
     answer : str
     """ 
-        
-    examples = [
-    {"input": input_ad1, "output": output_ad1},
-    {"input": input_ad2, "output": output_ad2},
-    {"input": input_ad3, "output": output_ad3},
-    {"input": input_wrong1, "output": output_wrong1},
-    {"input": input_wrong2, "output": output_wrong2},
-    {"input": input_wrong3, "output": output_wrong3},
-]
+    
+    if language == 'EN':
 
-    example_selector = get_db_vectorstore(examples, examples_type="examples_gps")
+        examples = [
+        {"input": input_ad1_EN, "output": output_ad1_EN},
+        {"input": input_ad2_EN, "output": output_ad2_EN},
+        {"input": input_ad3_EN, "output": output_ad3_EN},
+        {"input": input_wrong1_EN, "output": output_wrong1_EN},
+        {"input": input_wrong2_EN, "output": output_wrong2_EN},
+        {"input": input_wrong3_EN, "output": output_wrong3_EN},
+    ]
+    
+    else:
+
+        examples = [
+        {"input": input_ad1, "output": output_ad1},
+        {"input": input_ad2, "output": output_ad2},
+        {"input": input_ad3, "output": output_ad3},
+        {"input": input_wrong1, "output": output_wrong1},
+        {"input": input_wrong2, "output": output_wrong2},
+        {"input": input_wrong3, "output": output_wrong3},
+    ]
+
+    example_selector = get_db_vectorstore(examples, language, examples_type="examples_gps")
     # Define the few-shot prompt.
     few_shot_prompt = FewShotChatMessagePromptTemplate(
     # The input variables select the values to pass to the example_selector
@@ -116,7 +133,7 @@ def get_immo_xy_gpt4_fewshots(ad, template) :
     return answer
 
 
-def get_immo_review(ad, template):
+def get_immo_review(ad, template, language):
     """
     Retourne la réponse du LLM quant à la review de la description du bien immobilier
 
@@ -130,15 +147,32 @@ def get_immo_review(ad, template):
     answer : str
     """ 
 
-    examples = [
-    {"input": input_ad1, "output": output_immoreview_ad1},
-    {"input": input_ad2, "output": output_immoreview_ad2},
-    {"input": input_wrong1, "output": output_wrong1},
-    {"input": input_wrong2, "output": output_wrong2},
-    {"input": input_wrong3, "output": output_wrong3},
-]
+    if language == 'EN':
 
-    example_selector = get_db_vectorstore(examples, examples_type="examples_reviews")
+        examples = [
+        {"input": input_ad1_EN, "output": output_immoreview_ad1_EN},
+        {"input": input_ad2_EN, "output": output_immoreview_ad2_EN},
+        {"input": input_wrong1_EN, "output": output_wrong1_EN},
+        {"input": input_wrong2_EN, "output": output_wrong2_EN},
+        {"input": input_wrong3_EN, "output": output_wrong3_EN},
+        ]
+
+        immo_review_db = 'immo_review_EN'
+
+    else:
+
+        examples = [
+        {"input": input_ad1, "output": output_immoreview_ad1},
+        {"input": input_ad2, "output": output_immoreview_ad2},
+        {"input": input_wrong1, "output": output_wrong1},
+        {"input": input_wrong2, "output": output_wrong2},
+        {"input": input_wrong3, "output": output_wrong3},
+        ]        
+        
+        immo_review_db = 'immo_review'
+
+
+    example_selector = get_db_vectorstore(examples, language, examples_type="examples_reviews")
     # Define the few-shot prompt.
     few_shot_prompt = FewShotChatMessagePromptTemplate(
     # The input variables select the values to pass to the example_selector
@@ -162,8 +196,8 @@ def get_immo_review(ad, template):
     if os.path.exists('./chroma_db/immo_review'):
         print("Chargement de la base de données Chroma existante")
         vectorstore = Chroma(
-            persist_directory='./chroma_db/immo_review',
-            collection_name='immo_review',
+            persist_directory=f'./chroma_db/{immo_review_db}',
+            collection_name=immo_review_db,
             embedding_function=OpenAIEmbeddings(model=MODEL_EMBEDDING)
         )
 
@@ -215,7 +249,7 @@ def get_immo_rewrite(ad, template):
     return answer
 
 
-def get_immo_places(ad, template):
+def get_immo_places(ad, template, language):
     """
     Retourne la réponse du LLM quant aux lieux identifiés dans la description du bien immobilier
 
@@ -229,15 +263,28 @@ def get_immo_places(ad, template):
     answer : str
     """ 
 
-    examples = [
-    {"input": input_places_ad1, "output": output_places_ad1},
-    {"input": input_places_ad2, "output": output_places_ad2},
-    {"input": input_wrong1, "output": output_wrong1},
-    {"input": input_wrong2, "output": output_wrong2},
-    {"input": input_wrong3, "output": output_wrong3},
-]
+    if language == 'EN':
 
-    example_selector = get_db_vectorstore(examples, examples_type="examples_places")
+        examples = [
+        {"input": input_places_ad1_EN, "output": output_places_ad1_EN},
+        {"input": input_places_ad2_EN, "output": output_places_ad2_EN},
+        {"input": input_wrong1_EN, "output": output_wrong1_EN},
+        {"input": input_wrong2_EN, "output": output_wrong2_EN},
+        {"input": input_wrong3_EN, "output": output_wrong3_EN},
+    ]
+
+    else:
+
+        examples = [
+        {"input": input_places_ad1, "output": output_places_ad1},
+        {"input": input_places_ad2, "output": output_places_ad2},
+        {"input": input_wrong1, "output": output_wrong1},
+        {"input": input_wrong2, "output": output_wrong2},
+        {"input": input_wrong3, "output": output_wrong3},
+    ]
+
+
+    example_selector = get_db_vectorstore(examples, language, examples_type="examples_places")
     # Define the few-shot prompt.
     few_shot_prompt = FewShotChatMessagePromptTemplate(
     # The input variables select the values to pass to the example_selector

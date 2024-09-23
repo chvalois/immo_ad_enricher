@@ -22,7 +22,7 @@ def test_extract_reviews_all_present():
         'review_bonus': 5,
     }
 
-    reviews = extract_reviews(text)
+    reviews = extract_reviews(text, 'FR')
 
     assert reviews == expected_reviews
 
@@ -43,7 +43,7 @@ def test_extract_reviews_some_missing():
         'review_bonus': 5,
     }
 
-    reviews = extract_reviews(text)
+    reviews = extract_reviews(text, 'FR')
 
     # Check that only the present reviews are extracted
     assert reviews == expected_reviews
@@ -55,7 +55,7 @@ def test_extract_reviews_none_present():
 
     expected_reviews = {}
 
-    reviews = extract_reviews(text)
+    reviews = extract_reviews(text, 'FR')
 
     # No reviews should be extracted
     assert reviews == expected_reviews
@@ -72,7 +72,7 @@ def test_extract_reviews_invalid_format():
     expected_reviews = {
     }
 
-    reviews = extract_reviews(text)
+    reviews = extract_reviews(text, 'FR')
 
     # Only the valid review should be extracted
     assert reviews == expected_reviews
