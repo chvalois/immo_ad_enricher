@@ -9,7 +9,8 @@ Stack :
 - API Open AI
 - Streamlit
 
-![Ecran d'accueil de l'application](resources/home.png)
+L'application est disponible en français et en anglais :
+![image](https://github.com/user-attachments/assets/b47f6027-3f80-4e4e-9ec7-f658891129d0)
 
 A partir d'une annonce, l'application renvoie 3 rubriques : 
 
